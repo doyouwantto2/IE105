@@ -1,0 +1,9 @@
+flwr
+langchain
+langgraph
+langsmith
+langchain-ollama
+pytest
+numpy
+pandas
+matplotlib
