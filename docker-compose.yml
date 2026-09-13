@@ -1,0 +1,55 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"          
+    volumes:
+      - ollama_data:/root/.ollama   
+    networks:
+      - ai-network
+
+  ollama-pull:
+    image: ollama/ollama:latest
+    container_name: ollama-pull
+    depends_on:
+      - ollama
+    entrypoint: >
+      sh -c "
+        echo '⏳ Đang chờ Ollama sẵn sàng...';
+        until ollama list > /dev/null 2>&1; do sleep 2; done;
+        echo '📥 Đang tải model Qwen...';
+        ollama pull qwen2.5:7b;
+        echo '✅ Model Qwen đã sẵn sàng.';
+      "
+    environment:
+      - OLLAMA_HOST=http://ollama:11434   
+    networks:
+      - ai-network
+    restart: "no"
+
+  langflow:
+    image: docker.io/langflowai/langflow:latest
+    container_name: langflow
+    restart: unless-stopped
+    depends_on:
+      - ollama
+    ports:
+      - "7860:7860"            
+    volumes:
+      - langflow_data:/app/langflow
+    environment:
+      - LANGFLOW_AUTO_LOGIN=true
+      - LANGFLOW_HOST=0.0.0.0
+      - OLLAMA_BASE_URL=http://ollama:11434
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  langflow_data:
