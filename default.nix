@@ -4,7 +4,11 @@ let
   pythonEnv = pkgs.python3.withPackages (ps: with ps; [
     langchain
     langgraph
+    langsmith
+    langchain-ollama
+    pytest
     numpy
+    ollama           
     pandas
     matplotlib
   ]);
