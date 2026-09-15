@@ -24,11 +24,15 @@ flowchart TB
     C -->|events| F
     F -.->|params| A
 
-    style A fill:#e1f5ff
-    style P fill:#fff4e1
-    style O fill:#e8f5e9
-    style C fill:#fce4ec
-    style F fill:#f3e5f5
+    style A fill:#1565C0,color:#FFFFFF,stroke:#0D47A1,stroke-width:2px
+    style P fill:#E65100,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+    style O fill:#2E7D32,color:#FFFFFF,stroke:#1B5E20,stroke-width:2px
+    style C fill:#C62828,color:#FFFFFF,stroke:#8E0000,stroke-width:2px
+    style F fill:#6A1B9A,color:#FFFFFF,stroke:#4A148C,stroke-width:2px
+
+    style Device fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#000000
+    style Backend fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#000000
+    style ML fill:#F3E5F5,stroke:#6A1B9A,stroke-width:2px,color:#000000
 ```
 
 # Flow
@@ -43,13 +47,13 @@ flowchart LR
     S6 --> S7[7. Flower<br/>learn]
     S7 -.-> S1
 
-    style S1 fill:#e1f5ff
-    style S2 fill:#fff4e1
-    style S3 fill:#e8f5e9
-    style S4 fill:#e8f5e9
-    style S5 fill:#fff4e1
-    style S6 fill:#fce4ec
-    style S7 fill:#f3e5f5
+    style S1 fill:#1565C0,color:#FFFFFF,stroke:#0D47A1,stroke-width:2px
+    style S2 fill:#E65100,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+    style S3 fill:#2E7D32,color:#FFFFFF,stroke:#1B5E20,stroke-width:2px
+    style S4 fill:#1B5E20,color:#FFFFFF,stroke:#0D3D14,stroke-width:2px
+    style S5 fill:#E65100,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+    style S6 fill:#C62828,color:#FFFFFF,stroke:#8E0000,stroke-width:2px
+    style S7 fill:#6A1B9A,color:#FFFFFF,stroke:#4A148C,stroke-width:2px
 ```
 
 # Components
@@ -93,10 +97,26 @@ flowchart TB
     C --> F
     F -.-> A1 & A2 & A3
 
-    style Agents fill:#e1f5ff
-    style Policy fill:#fff4e1
-    style Org fill:#e8f5e9
-    style Ext fill:#f5f5f5
+    style A1 fill:#1565C0,color:#FFFFFF,stroke:#0D47A1,stroke-width:2px
+    style A2 fill:#1976D2,color:#FFFFFF,stroke:#0D47A1,stroke-width:2px
+    style A3 fill:#1E88E5,color:#FFFFFF,stroke:#0D47A1,stroke-width:2px
+
+    style P1 fill:#E65100,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+    style P2 fill:#EF6C00,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+    style P3 fill:#F57C00,color:#FFFFFF,stroke:#BF360C,stroke-width:2px
+
+    style O1 fill:#2E7D32,color:#FFFFFF,stroke:#1B5E20,stroke-width:2px
+    style O2 fill:#388E3C,color:#FFFFFF,stroke:#1B5E20,stroke-width:2px
+    style O3 fill:#43A047,color:#FFFFFF,stroke:#1B5E20,stroke-width:2px
+
+    style C fill:#C62828,color:#FFFFFF,stroke:#8E0000,stroke-width:2px
+    style F fill:#6A1B9A,color:#FFFFFF,stroke:#4A148C,stroke-width:2px
+    style I fill:#37474F,color:#FFFFFF,stroke:#263238,stroke-width:2px
+
+    style Agents fill:#E3F2FD,stroke:#1565C0,stroke-width:2px,color:#000000
+    style Policy fill:#FFF3E0,stroke:#E65100,stroke-width:2px,color:#000000
+    style Org fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,color:#000000
+    style Ext fill:#ECEFF1,stroke:#37474F,stroke-width:2px,color:#000000
 ```
 
 # Folder structure
