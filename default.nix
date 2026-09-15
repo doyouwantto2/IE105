@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { config.allowUnfree = true; } }:
 
 pkgs.mkShell {
-  name = "IE105";
+  name = "OFMIS";
 
   packages = with pkgs; [
     python312
