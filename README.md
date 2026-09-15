@@ -1,3 +1,106 @@
+# Overall architecture:
+
+```mermaid
+flowchart TB
+    subgraph Device["DEVICE"]
+        A[AGENT<br/>LangChain]
+        P[POLICY<br/>Python]
+    end
+
+    subgraph Backend["BACKEND"]
+        O[ORGANIZATION<br/>LangGraph]
+        C[(CHAIN<br/>Ledger)]
+    end
+
+    subgraph ML["LEARNING"]
+        F[FLOWER]
+    end
+
+    A -->|propose| P
+    P -->|dispatch| O
+    O -->|outcome| P
+    O -->|settle| C
+    P -->|persist| C
+    C -->|events| F
+    F -.->|params| A
+
+    style A fill:#e1f5ff
+    style P fill:#fff4e1
+    style O fill:#e8f5e9
+    style C fill:#fce4ec
+    style F fill:#f3e5f5
+```
+
+# Flow
+
+```mermaid
+flowchart LR
+    S1[1. Agent<br/>đề xuất] --> S2[2. Policy<br/>validate]
+    S2 --> S3[3. Organization<br/>thực thi]
+    S3 --> S4[4. Verdict<br/>phán quyết]
+    S4 --> S5[5. Policy<br/>settle điểm]
+    S5 --> S6[6. Chain<br/>ghi lại]
+    S6 --> S7[7. Flower<br/>học]
+    S7 -.-> S1
+
+    style S1 fill:#e1f5ff
+    style S2 fill:#fff4e1
+    style S3 fill:#e8f5e9
+    style S4 fill:#e8f5e9
+    style S5 fill:#fff4e1
+    style S6 fill:#fce4ec
+    style S7 fill:#f3e5f5
+```
+
+# Components
+
+```mermaid
+flowchart TB
+    subgraph Agents["AGENT — 3 vai trò"]
+        direction LR
+        A1[Claimer<br/>tìm bug]
+        A2[Challenger<br/>phản biện]
+        A3[Voter<br/>phán xử]
+    end
+
+    subgraph Policy["POLICY — 3 thành phần"]
+        direction LR
+        P1[State<br/>điểm, budget]
+        P2[Rules<br/>luật]
+        P3[Enforcer<br/>thi hành]
+    end
+
+    subgraph Org["ORGANIZATION — 3 thành phần"]
+        direction LR
+        O1[State<br/>arena]
+        O2[Graph<br/>luồng]
+        O3[Verify<br/>sandbox/vote]
+    end
+
+    subgraph Ext["HẠ TẦNG"]
+        direction LR
+        C[(Chain<br/>sổ cái)]
+        F[Flower<br/>học]
+        I[IPFS<br/>bằng chứng]
+    end
+
+    A1 & A2 & A3 --> P1
+    P1 --> P2 --> P3
+    P3 --> O1
+    O1 --> O2 --> O3
+    O3 --> C
+    O3 --> I
+    C --> F
+    F -.-> A1 & A2 & A3
+
+    style Agents fill:#e1f5ff
+    style Policy fill:#fff4e1
+    style Org fill:#e8f5e9
+    style Ext fill:#f5f5f5
+```
+
+# Folder structure
+
 ```text
 OFMIS/
 ├── pyproject.toml                    # replaces setup.py
