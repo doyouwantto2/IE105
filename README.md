@@ -1,9 +1,137 @@
-Ta chia Agent thành các nhóm để cùng nhau tìm lỗ hổng trong source code của các phần mềm. Nếu phát hiện một lỗ hổng bất kỳ thì nó sẽ tạo một báo cáo và ghi nhận lên blockchain tương tự như cách optimistic roll-ups hoạt động.
-
-Dữ liệu về lỗ hổng có trạng thái VALID sẽ được đưa vào flower để training các model. Các Agent khác cũng sẽ cập nhật thông tin dựa trên nó.
-
-Các nhóm Agent khác bên cạnh truy tìm lỗ hổng để nhận được điểm thì cũng sẽ kiểm tra báo cáo lỗ hổng mà các nhóm Agent khác lập ra để kiểm chứng xem liệu lỗ hổng đó có thật hay không. Nếu một nhóm phát hiện một lỗ hổng được báo cáo sai thì sẽ kích hoạt cơ chế tranh chấp để phân xử, các nhóm Agent khác sẽ đứng ra kiểm chứng và bỏ phiếu bên nào chiến thắng.
-
-Nếu bên tố cáo thắng thì sẽ được nhận điểm thưởng, đồng thời trạng thái của dữ liệu về lỗ hổng được ghi nhận trên blockchain sẽ chuyển từ VALID sang INVALID. Còn trong trường hợp các nhóm Agent khác xử bên tố cáo thua thì bên tố cáo sẽ bị mất điểm.
-
-Cân bằng Nash muốn đạt được đó là các Agent xác định lỗi chính xác hơn và chỉ mở tranh chấp nếu có căn cứ rõ ràng về việc một lỗi bị báo sai.
+```text
+OFMIS/
+├── pyproject.toml                    # replaces setup.py
+├── README.md
+├── default.nix
+├── docker-compose.yml
+├── .gitignore
+├── .env.example                      # template for environment variables
+│
+├── configs/                          # configs for simulation and experiments
+│   ├── default.yaml
+│   ├── scenarios/
+│   │   ├── honest_only.yaml
+│   │   ├── with_farmers.yaml
+│   │   └── with_collusion.yaml
+│   └── rules.yaml                    # Policy rules (advance, clawback, etc.)
+│
+├── assets/
+│   └── flow.drawio.png
+│
+├── src/
+│   └── ofmis/                        # main package
+│       │
+│       ├── __init__.py
+│       ├── config.py                 # load config from configs/
+│       ├── logging.py                # structured logging setup
+│       ├── errors.py                 # custom exceptions
+│       │
+│       ├── shared/                   # shared types & clients
+│       │   ├── __init__.py
+│       │   ├── types.py              # Claim, Challenge, Vote, Verdict, AgentState
+│       │   ├── schemas.py            # Pydantic models for validation
+│       │   └── clients/
+│       │       ├── __init__.py
+│       │       ├── chain.py          # blockchain client
+│       │       ├── ipfs.py           # IPFS client
+│       │       ├── sandbox.py        # sandbox client (Docker/E2B)
+│       │       └── flower.py         # Flower client
+│       │
+│       ├── agent/                    # MICRO LAYER
+│       │   ├── __init__.py
+│       │   ├── base.py               # BaseAgent class
+│       │   ├── claimer.py            # ClaimerAgent
+│       │   ├── challenger.py         # ChallengerAgent
+│       │   ├── voter.py              # VoterAgent
+│       │   ├── tools/                # LangChain tools
+│       │   │   ├── __init__.py
+│       │   │   ├── scan.py           # scan_code, static analysis
+│       │   │   ├── poc.py            # create_poc, verify_poc
+│       │   │   ├── submit.py         # submit_claim
+│       │   │   ├── challenge.py      # challenge
+│       │   │   └── vote.py           # vote
+│       │   ├── prompts/              # prompt templates
+│       │   │   ├── __init__.py
+│       │   │   ├── claimer.txt
+│       │   │   ├── challenger.txt
+│       │   │   └── voter.txt
+│       │
+│       ├── policy/                   # CONSTRAINT LAYER
+│       │   ├── __init__.py
+│       │   ├── state.py              # AgentState class
+│       │   ├── rules.py              # Rules class (loaded from configs/rules.yaml)
+│       │   ├── enforcer.py           # validate + apply logic
+│       │   ├── storage.py            # persistence (cache + chain)
+│       │   └── decay.py              # decay function
+│       │
+│       ├── organization/             # MACRO LAYER
+│       │   ├── __init__.py
+│       │   ├── state.py              # ArenaState (TypedDict)
+│       │   ├── graph.py              # build_graph() → CompiledGraph
+│       │   ├── nodes/                # LangGraph nodes
+│       │   │   ├── __init__.py
+│       │   │   ├── claim.py          # node_claim
+│       │   │   ├── challenge.py      # node_challenge
+│       │   │   ├── verify.py         # node_verify (sandbox or vote)
+│       │   │   ├── settle.py         # node_settle (clawback)
+│       │   │   ├── penalty.py        # node_penalty (throttle/freeze)
+│       │   │   └── fl.py             # node_fl (push to Flower)
+│       │   ├── routers.py            # routing functions
+│       │   └── checkpointer.py       # checkpointer setup (MemorySaver/Postgres)
+│       │
+│       ├── learning/                 # LEARNING LAYER
+│       │   ├── __init__.py
+│       │   ├── client.py             # Flower client wrapper
+│       │   ├── aggregation.py        # weighted aggregation
+│       │   └── unlearning.py         # clawback handling
+│       │
+│       └── observability/            # OBSERVABILITY LAYER (optional)
+│           ├── __init__.py
+│           ├── tracer.py             # LangSmith wrapper
+│           └── metrics.py            # custom metrics
+│
+├── simulation/                       # SIMULATION
+│   ├── __init__.py
+│   ├── runner.py                     # main simulation loop
+│   ├── environment.py                # mock codebase, bugs
+│   ├── agent_factory.py              # create agents by type
+│   ├── strategies/                   # agent strategies
+│   │   ├── __init__.py
+│   │   ├── honest.py
+│   │   ├── farmer.py
+│   │   ├── lazy.py
+│   │   └── adversarial.py
+│   └── metrics.py                    # metrics collection
+│
+├── scripts/                          # entry points
+│   ├── run_simulation.py             # run a single simulation
+│   ├── run_experiment.py             # run batch experiments
+│   ├── deploy_chain.py               # deploy local chain
+│   ├── pull_models.py                # pull Ollama models
+│   └── analyze_results.py            # analyze results
+│
+├── tests/                            # UNIT TESTS
+│   ├── __init__.py
+│   ├── conftest.py                   # fixtures
+│   ├── unit/
+│   │   ├── test_policy.py
+│   │   ├── test_enforcer.py
+│   │   ├── test_agent.py
+│   │   └── test_rules.py
+│   ├── integration/
+│   │   ├── test_graph.py
+│   │   ├── test_dispute_flow.py
+│   │   └── test_clawback.py
+│   └── e2e/
+│       └── test_full_simulation.py
+│
+├── notebooks/                        # Jupyter notebooks
+│   ├── 01_explore_results.ipynb
+│   ├── 02_visualize_metrics.ipynb
+│   └── 03_compare_scenarios.ipynb
+│
+└── data/                             # data (mostly gitignored)
+    ├── .gitkeep
+    ├── results/                      # simulation results
+    └── models/                       # trained models
+```
