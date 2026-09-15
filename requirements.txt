@@ -1,9 +1,11 @@
-flwr
 langchain
+langchain-core
+langchain-community
+langchain-ollama
 langgraph
 langsmith
-langchain-ollama
-pytest
+flwr
 numpy
 pandas
 matplotlib
+pytest
