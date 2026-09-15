@@ -35,12 +35,12 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-    S1[1. Agent<br/>đề xuất] --> S2[2. Policy<br/>validate]
-    S2 --> S3[3. Organization<br/>thực thi]
-    S3 --> S4[4. Verdict<br/>phán quyết]
-    S4 --> S5[5. Policy<br/>settle điểm]
-    S5 --> S6[6. Chain<br/>ghi lại]
-    S6 --> S7[7. Flower<br/>học]
+    S1[1. Agent<br/>propose] --> S2[2. Policy<br/>validate]
+    S2 --> S3[3. Organization<br/>execute]
+    S3 --> S4[4. Verdict<br/>decision]
+    S4 --> S5[5. Policy<br/>settle score]
+    S5 --> S6[6. Chain<br/>record]
+    S6 --> S7[7. Flower<br/>learn]
     S7 -.-> S1
 
     style S1 fill:#e1f5ff
@@ -56,32 +56,32 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-    subgraph Agents["AGENT — 3 vai trò"]
+    subgraph Agents["AGENT — 3 roles"]
         direction LR
-        A1[Claimer<br/>tìm bug]
-        A2[Challenger<br/>phản biện]
-        A3[Voter<br/>phán xử]
+        A1[Claimer<br/>find bugs]
+        A2[Challenger<br/>counter-argue]
+        A3[Voter<br/>adjudicate]
     end
 
-    subgraph Policy["POLICY — 3 thành phần"]
+    subgraph Policy["POLICY — 3 components"]
         direction LR
-        P1[State<br/>điểm, budget]
-        P2[Rules<br/>luật]
-        P3[Enforcer<br/>thi hành]
+        P1[State<br/>score, budget]
+        P2[Rules<br/>laws]
+        P3[Enforcer<br/>enforce]
     end
 
-    subgraph Org["ORGANIZATION — 3 thành phần"]
+    subgraph Org["ORGANIZATION — 3 components"]
         direction LR
         O1[State<br/>arena]
-        O2[Graph<br/>luồng]
+        O2[Graph<br/>flow]
         O3[Verify<br/>sandbox/vote]
     end
 
-    subgraph Ext["HẠ TẦNG"]
+    subgraph Ext["INFRASTRUCTURE"]
         direction LR
-        C[(Chain<br/>sổ cái)]
-        F[Flower<br/>học]
-        I[IPFS<br/>bằng chứng]
+        C[(Chain<br/>ledger)]
+        F[Flower<br/>learning]
+        I[IPFS<br/>evidence]
     end
 
     A1 & A2 & A3 --> P1
