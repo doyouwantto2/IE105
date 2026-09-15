@@ -103,7 +103,7 @@ flowchart TB
 
 ```text
 OFMIS/
-├── pyproject.toml                    # replaces setup.py
+├── pyproject.toml                    # Initialize project
 ├── README.md
 ├── default.nix
 ├── docker-compose.yml
